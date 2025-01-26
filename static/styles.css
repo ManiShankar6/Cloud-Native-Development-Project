@@ -1,0 +1,177 @@
+/* General Styling */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Heading Container */
+.heading-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    max-width: 700px;
+    margin: 20px auto;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.heading-container:hover {
+    transform: scale(1.03);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Circle for Video */
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    position: relative; /* Constrain child elements inside this circle */
+    z-index: 2; /* Ensure the circle stays above the background */
+}
+
+.circle video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none; /* Prevent hover effects directly on the video */
+    position: absolute; /* Ensure the video is scoped strictly within the circle */
+    top: 0;
+    left: 0;
+}
+
+/* Hover Effects */
+.circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 6px 15px rgba(255, 255, 255, 0.6);
+}
+
+/* Prevent Global Propagation */
+.heading-container:hover .circle video {
+    transform: none;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+
+
+/* Text Styling */
+.text h1 {
+    font-size: 3rem;
+    color: #FFD700;
+    font-weight: bold;
+    text-shadow: 1px 1px 5px rgba(255, 215, 0, 0.8);
+    margin: 0;
+    transition: transform 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.text h1:hover {
+    transform: scale(1.05);
+    text-shadow: 0px 0px 10px rgba(255, 255, 0, 1);
+}
+
+.text h2 {
+    font-size: 1.5rem;
+    color: #e0e0e0;
+    margin: 0;
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.text:hover h2 {
+    transform: scale(1.03);
+    color: #FFD700;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Buttons */
+.btn-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-custom.upload {
+    background-color: #007bff;
+}
+
+.btn-custom:hover {
+    transform: scale(1.1);
+    background-color: #45a049;
+}
+
+.btn-custom.upload:hover {
+    background-color: #0056b3;
+}
+
+/* File Name Display */
+.file-names {
+    margin-top: 10px;
+    color: #ffffff;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Image Styling */
+.image-container img {
+    max-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-container img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+}
+
+
+
+
+
+
