@@ -49,12 +49,15 @@ def blob_exists(bucket_name, blob_name):
     bucket = storage_client.bucket(bucket_name)
     return bucket.blob(blob_name).exists()
 
+
 def upload_blob(bucket_name, file, destination_blob_name):
     # Upload file directly to Google Cloud Storage
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_blob_name)
+    blob.content_type = file.content_type  # Set the MIME type explicitly
     blob.upload_from_file(file)
+
 
 def download_blob(bucket_name, blob_name):
     # Download a file from Google Cloud Storage
@@ -63,7 +66,7 @@ def download_blob(bucket_name, blob_name):
     blob = bucket.blob(blob_name)
     if blob.exists():
         file_stream = blob.download_as_bytes()
-        content_type = blob.content_type or "application/octet-stream"
+        content_type = blob.content_type or "image/jpeg"  # Default to a common image type
         return file_stream, content_type
     else:
         raise Exception("Blob not found")

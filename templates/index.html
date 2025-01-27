@@ -49,14 +49,21 @@
         </form>
     </div>
 
+
     <!-- Uploaded Images Section -->
-    <div class="image-container">
-        {% for file in uploaded_files %}
-        <a href="{{ url_for('get_file', filename=file) }}" target="_blank">
-            <img src="{{ url_for('get_file', filename=file) }}" alt="{{ file }}">
-        </a>
-        {% endfor %}
-    </div>
+<div class="image-container">
+    {% for file in uploaded_files %}
+    <!-- Thumbnail with onclick to open the fullscreen modal -->
+    <img src="{{ url_for('get_file', filename=file) }}" alt="{{ file }}" class="thumbnail" onclick="openFullscreen(this.src)">
+    {% endfor %}
+</div>
+
+<!-- Fullscreen Modal -->
+<div id="fullscreenModal" class="modal">
+    <span class="close" onclick="closeFullscreen()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
     
 </body>
 </html>

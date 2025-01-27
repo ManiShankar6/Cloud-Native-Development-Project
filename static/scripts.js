@@ -76,3 +76,15 @@ function updateFileNames(input) {
         fileNamesDisplay.textContent = fileNames || "No files selected";
     }
 }
+
+function openFullscreen(src) {
+    const modal = document.getElementById('fullscreenModal');
+    const modalImage = document.getElementById('modalImage');
+    modal.style.display = 'block';
+    modalImage.src = src;
+}
+
+function closeFullscreen() {
+    const modal = document.getElementById('fullscreenModal');
+    modal.style.display = 'none';
+}
