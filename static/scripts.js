@@ -1,4 +1,4 @@
-const { motion } = window['framer-motion'];
+const { motion } = window['framer-motion']; 
 
 // React Component for Heading Animation with Circle
 function HeadingAnimation() {
@@ -58,32 +58,67 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach Event Listener to File Input
     const fileInput = document.getElementById('file');
     if (fileInput) {
-        // Attach the change event to the file input
         fileInput.addEventListener('change', function () {
             updateFileNames(this);
         });
     }
+
+    document.querySelectorAll(".image-card").forEach((card) => {
+        const imageName = card.querySelector(".thumbnail").dataset.image;
+        const metadataContainer = card.querySelector(".metadata");
+        const titleElement = metadataContainer.querySelector("h3");
+    
+        fetch(`/files/${imageName.split('.').slice(0, -1).join('.')}.json`)
+            .then(response => {
+                if (!response.ok) throw new Error("Metadata not found");
+                return response.json();
+            })
+            .then(data => {
+                titleElement.innerText = data.title; // Set the title
+                metadataContainer.dataset.description = data.description; // Store the description
+            })
+            .catch(error => {
+                console.log(`Metadata not found for ${imageName}:`, error);
+            });
+    });
+    
 });
 
 // Function to Update Selected File Names
 function updateFileNames(input) {
-    // Get all selected file names
     const fileNames = Array.from(input.files).map(file => file.name).join(", ");
     const fileNamesDisplay = document.getElementById('file-names');
 
-    // Update the text content of the file-names div
     if (fileNamesDisplay) {
         fileNamesDisplay.textContent = fileNames || "No files selected";
     }
 }
 
-function openFullscreen(src) {
+// Open full-screen modal
+
+
+function openFullscreen(src, title, description) {
     const modal = document.getElementById('fullscreenModal');
+    const modalTitle = document.getElementById('modalTitle');
     const modalImage = document.getElementById('modalImage');
-    modal.style.display = 'block';
+    const modalDescription = document.getElementById('modalDescription');
+    const modalContentContainer = document.querySelector('.modal-content-container');
+
+    modal.style.display = 'flex';
+    modalTitle.innerText = title; // Display title
     modalImage.src = src;
+    modalImage.style.maxHeight = "70vh";
+    modalImage.style.objectFit = "contain";
+    
+    // Preserve HTML formatting for the description
+    modalDescription.innerHTML = `<strong>Description:</strong> ${description}`;
+
+    // Reset scroll position to top when opening a new image
+    modalContentContainer.scrollTop = 0;
 }
 
+
+// Close full-screen modal
 function closeFullscreen() {
     const modal = document.getElementById('fullscreenModal');
     modal.style.display = 'none';

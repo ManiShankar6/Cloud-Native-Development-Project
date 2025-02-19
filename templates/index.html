@@ -13,10 +13,17 @@
     <script defer src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="alert alert-warning" role="alert">
+            {{ messages[0][1] }}
+        </div>
+    {% endif %}
+{% endwith %}
+
     <!-- Video Background -->
     <video autoplay loop muted>
         <source src="/static/vid.mp4" type="video/mp4">
-        
     </video>
 
     <!-- Heading Animation with Circle -->
@@ -24,7 +31,6 @@
         <div class="circle">
             <video autoplay loop muted>
                 <source src="/static/vid2.mp4" type="video/mp4">
-                
             </video>
         </div>
         <div class="text">
@@ -49,21 +55,51 @@
         </form>
     </div>
 
-
     <!-- Uploaded Images Section -->
-<div class="image-container">
-    {% for file in uploaded_files %}
-    <!-- Thumbnail with onclick to open the fullscreen modal -->
-    <img src="{{ url_for('get_file', filename=file) }}" alt="{{ file }}" class="thumbnail" onclick="openFullscreen(this.src)">
-    {% endfor %}
-</div>
+    <div class="image-container">
+        {% for file in uploaded_files %}
+        <div class="image-card">
+            <img src="{{ url_for('get_file', filename=file) }}" alt="{{ file }}" class="thumbnail" 
+    onclick="openFullscreen(this.src, 
+        document.getElementById('title-{{ file|replace('.','-') }}').innerText, 
+        document.getElementById('metadata-{{ file|replace('.','-') }}').dataset.description)">
 
-<!-- Fullscreen Modal -->
-<div id="fullscreenModal" class="modal">
-    <span class="close" onclick="closeFullscreen()">&times;</span>
-    <img class="modal-content" id="modalImage">
-</div>
+            <!-- <div class="metadata" id="metadata-{{ file|replace('.','-') }}"></div> -->
+            <div class="metadata" id="metadata-{{ file|replace('.','-') }}">
+                <h3 id="title-{{ file|replace('.','-') }}"></h3>
+                <p class="click-note">Click on the image to see its description.</p>
+            </div>
+            
+        </div>
+        <script>
 
+            fetch("{{ url_for('get_file', filename=file.rsplit('.', 1)[0] + '.json') }}")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("title-{{ file|replace('.','-') }}").innerText = data.title;
+                document.getElementById("metadata-{{ file|replace('.','-') }}").dataset.description = data.description;
+            })
+            .catch(error => console.log("Metadata not found for {{ file }}"));
+
+        </script>
+        {% endfor %}
+    </div>
     
+    <!-- Fullscreen Modal -->
+
+    <div id="fullscreenModal" class="modal">
+        <span class="close" onclick="closeFullscreen()">&times;</span>
+        <div class="modal-content-container">
+            <h2 class="modal-title" id="modalTitle"></h2> <!-- Title added here -->
+            <img class="modal-content" id="modalImage">
+            <div class="modal-description">
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+    
+
+
+
 </body>
 </html>
