@@ -7,7 +7,8 @@ from google.cloud import storage, secretmanager
 import google.generativeai as genai
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"  # Required for flashing messages
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback_secret_key")  # Required for flashing messages
+
 
 bucket_name = 'cloud-app-cnd-2025-bucket'
 secret_name = "projects/cloud-app-cnd-2025/secrets/GEMINI_API_KEY/versions/latest"
@@ -97,7 +98,7 @@ def generate_image_description(file_path):
 
 def format_description(description):
     formatted_desc = description.replace("**", "<strong>").replace("**", "</strong>")
-    formatted_desc = formatted_desc.replace("\n", "<br><br>")  # Ensures spacing
+    formatted_desc = formatted_desc.replace("\n", "<br><br>")  
     return formatted_desc
 
 
