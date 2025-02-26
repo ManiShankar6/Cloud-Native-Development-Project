@@ -7,18 +7,22 @@ from google.cloud import storage, secretmanager
 import google.generativeai as genai
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "fallback_secret_key")  # Required for flashing messages
 
-
-bucket_name = 'cloud-app-cnd-2025-bucket'
-secret_name = "projects/cloud-app-cnd-2025/secrets/GEMINI_API_KEY/versions/latest"
-
-def get_gemini_api_key():
+# Function to retrieve secrets from Google Secret Manager
+def get_secret(secret_name):
     client = secretmanager.SecretManagerServiceClient()
-    response = client.access_secret_version(name=secret_name)
+    secret_path = f"projects/cloud-app-cnd-2025/secrets/{secret_name}/versions/latest"
+    response = client.access_secret_version(name=secret_path)
     return response.payload.data.decode("UTF-8")
 
-genai.configure(api_key=get_gemini_api_key())
+# Retrieve Flash Warning Key from Google Secret Manager
+app.secret_key = get_secret("FLASH_WARNING_KEY") # for flashing warning message 
+
+
+# Retrieve Gemini API key from Google Secret Manager
+genai.configure(api_key=get_secret("GEMINI_API_KEY"))
+
+bucket_name = 'cloud-app-cnd-2025-bucket'
 
 @app.route('/')
 def index():
