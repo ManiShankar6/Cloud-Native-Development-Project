@@ -92,13 +92,38 @@ def generate_and_store_image_metadata(filename):
     json_blob = bucket.blob(json_filename)
     json_blob.upload_from_string(json.dumps(metadata, indent=4), content_type='application/json')
 
+
 def generate_image_description(file_path):
     img = upload_to_gemini(file_path, mime_type="image/jpeg")
-    title_request = [img, "Generate one title for the image that must be professional, please generate only title nothing else no punctuation nothing"]
-    description_request = [img, "Describe the image in detail with markdown-like formatting. Use bold for key elements and ensure readability."]
-    title_response = genai.GenerativeModel(model_name="gemini-1.5-flash").generate_content(title_request)
-    description_response = genai.GenerativeModel(model_name="gemini-1.5-flash").generate_content(description_request)
-    return title_response.text.strip(), description_response.text.strip()
+
+    combined_request = [
+        img,
+        """Generate a title and a detailed description for the image:
+        
+        - The **title** should be short, professional, and without any punctuation.
+        - The **description** should be detailed, formatted like markdown, and use **bold** for key elements.
+        
+        Return the output in this JSON format:
+        ```
+        {"title": "Generated title here", "description": "Generated description here"}
+        ```
+        """
+    ]
+
+    response = genai.GenerativeModel(model_name="gemini-1.5-flash").generate_content(combined_request)
+
+    # Extract and parse JSON response
+    try:
+        json_str = response.text.strip().replace("```json", "").replace("```", "").strip()
+        result = json.loads(json_str)
+        title = result.get("title", "").strip()
+        description = result.get("description", "").strip()
+    except json.JSONDecodeError:
+        title, description = "Untitled", "No description available."
+
+    return title, description
+
+
 
 def format_description(description):
     formatted_desc = description.replace("**", "<strong>").replace("**", "</strong>")
