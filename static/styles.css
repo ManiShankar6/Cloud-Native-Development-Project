@@ -4,7 +4,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: green;
+    background-color: blue;
     align-items: center;
     justify-content: center;
 }

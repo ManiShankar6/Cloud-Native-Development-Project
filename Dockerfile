@@ -4,7 +4,7 @@ FROM python:3.9-slim
 # Set environment variables
 ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
-ENV PORT 8080  # Cloud Run expects your app to run on port 8080
+ENV PORT 8080 
 
 # Set the working directory in the container
 WORKDIR $APP_HOME
